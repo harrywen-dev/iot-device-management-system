@@ -1,0 +1,47 @@
+CREATE TABLE users (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE devices (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    name VARCHAR(100) NOT NULL,
+    device_type VARCHAR(50),
+
+    ip_address VARCHAR(45),
+    mac_address VARCHAR(17),
+
+    protocol VARCHAR(20),
+    firmware_version VARCHAR(50),
+
+    status VARCHAR(20) NOT NULL DEFAULT 'offline',
+
+    last_seen TIMESTAMP,
+    location VARCHAR(100),
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE maintenance_records (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    device_id INTEGER NOT NULL,
+
+    description TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_maintenance_device
+        FOREIGN KEY (device_id)
+        REFERENCES devices(id)
+        ON DELETE CASCADE
+);
